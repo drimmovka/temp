@@ -1,96 +1,95 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 void split_text(char*, char**);
-char* get_text(int*);
-char* get_line(int*);
-int check_last_line(char*, int);
-char* concatenate(char*, int, char*, int, int);
+char* get_text(int*, int*);
+void fill_punctuation(char*, char*, int);
+void output_sentences(char**, char*, int n);
+int check_sentence(char*);
 
 int main() {
-    int text_size = 1;
-    char* text = get_text(&text_size);
+    int text_size = 1, n = 0;
+    char* text = get_text(&text_size, &n);
+    
+    char* punctuation = malloc(n * sizeof(char));
+    fill_punctuation(text, punctuation, text_size);
+    
+    char** sentences = malloc(n * sizeof(char*));
+    split_text(text, sentences);
 
-    int array_size = 0;
-    for (int i=0; i<text_size-1; i++) {
-        if (text[i] == '.' || text[i] == ';' || text[i] == '?' || text[i] == '!') {
-            array_size++;
-        }
-    }
-    printf("%d\n", array_size); //MISTAKE RIGHT HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    char** array = malloc(array_size * sizeof(char*));
-
-    // split_text(text, array);
+    output_sentences(sentences, punctuation, n);
 }
 
 
-void split_text(char* text, char** array) {
-    char* sep = ".;?!";
+int check_sentence(char* sentence) {
+    return 1;
+    int count_upper = 0;
+    for (int i=0; i<strlen(sentence); i++) {
+        int code = (int) sentence[i];
+        if (65 <= code && code <= 90) count_upper++;
+    }
+    return (count_upper > 1);
+}
+
+void output_sentences(char** sentences, char* punctuation, int n) {
+    int m = 0;
+    for (int i=0; i<n; i++) {        
+        if (1) {
+            m++;
+            int flag = 0;
+            for (int j=0; j<strlen(sentences[i]); j++) {
+            if (sentences[i][j] != ' ' && sentences[i][j] != '\n')
+                flag = 1;
+            if (flag && sentences[i][j] != '\n') 
+                printf("%c", sentences[i][j]);
+        }
+        printf("%c\n", punctuation[i]);
+        }
+    }
+    printf("Dragon flew away!\n");
+    printf("Количество предложений до %d и количество предложений после %d\n", n, m);
+}
+
+
+void fill_punctuation(char* text, char* punctuation, int text_size) {
+    int j = 0;
+    for (int i=0; i<text_size-1; i++) {
+        if (text[i] == '.' || text[i] == ';' || text[i] == '?') {
+            punctuation[j] = text[i];
+            j++;
+        }
+    }
+}
+
+void split_text(char* text, char** sentences) {
+    char* sep = ".;?";
     char* substr;
     
     substr = strtok(text, sep);
     int i = 0;
     while (substr != NULL) {
-        // array[i++] = substr;
+        sentences[i] = substr;
+        i++;
         substr = strtok(NULL, sep);
     }
 }
 
-
-char* get_text(int* text_size) {
+char* get_text(int* text_size, int* n) {
     int capacity = 1;
     char* text = (char*) malloc(sizeof(char));
-    
-    while (1) {
-        int line_size = 1;
-        char* line = get_line(&line_size);
-        (*text_size) += line_size - 1;
+    char ch = getchar();
+    while (ch != '!') {
+        text[(*text_size)-1] = ch;
         if ((*text_size) >= capacity) {
-            capacity = (int) pow(2, ceil(log2((*text_size))));
+            capacity *= 2;
             text = (char*) realloc(text, capacity * sizeof(char));
         }
-        // printf("%s\n", line);
-        // printf("%d %ld\n", (*text_size), strlen(text));
-        // printf("%d %ld\n", line_size, strlen(line));
-        // printf("%d\n", capacity);
-        text = strcat(text, line);
-        if (check_last_line(line, line_size)) {
-            break;
+        (*text_size)++;
+        if (ch == '.' || ch == ';' || ch == '?') {
+            (*n)++;
         }
-    }
-    return text;
-}
-
-
-char* get_line(int* line_size) {
-    int capacity = 1;
-    char* line = (char*) malloc(sizeof(char));
-    char ch = getchar();
-    while (ch != '\n') {
-        line[(*line_size)-1] = ch;
-        if ((*line_size) >= capacity) {
-            capacity *= 2;
-            line = (char*) realloc(line, capacity * sizeof(char));
-        }
-        (*line_size)++;
         ch = getchar();
     }
-    return line;
-}
-
-
-int check_last_line(char* line, int line_size) {
-    char* check_sentence = "Dragon flew away!";
-    int j = 16;
-    for (int i=line_size-2; i>=0; i--) {
-        if (line[i] == check_sentence[j]) {
-            j--;
-            if (j == -1) return 1;
-        } else {
-            break;
-        }
-    }
-    return 0;
+    return text;
 }
