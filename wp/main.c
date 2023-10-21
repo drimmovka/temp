@@ -4,23 +4,25 @@
 #include <math.h>
 
 void split_text(char*, char**);
-char* get_text(unsigned long int*);
-char* get_line(unsigned long int*);
-int check_last_line(char*);
-char* concatenate(char*, char*, int);
+char* get_text(int*);
+char* get_line(int*);
+int check_last_line(char*, int);
+char* concatenate(char*, int, char*, int, int);
 
 int main() {
-    unsigned long int text_size = 1;
+    int text_size = 1;
     char* text = get_text(&text_size);
+
     int array_size = 0;
     for (int i=0; i<text_size-1; i++) {
         if (text[i] == '.' || text[i] == ';' || text[i] == '?' || text[i] == '!') {
             array_size++;
         }
     }
-    // printf("%d\n", array_size); //MISTAKE RIGHT HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    printf("%d\n", array_size); //MISTAKE RIGHT HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     char** array = malloc(array_size * sizeof(char*));
-    split_text(text, array);
+
+    // split_text(text, array);
 }
 
 
@@ -31,27 +33,30 @@ void split_text(char* text, char** array) {
     substr = strtok(text, sep);
     int i = 0;
     while (substr != NULL) {
-        array[i++] = substr;
+        // array[i++] = substr;
         substr = strtok(NULL, sep);
     }
 }
 
-char* get_text(unsigned long int* text_size) {
+
+char* get_text(int* text_size) {
     int capacity = 1;
     char* text = (char*) malloc(sizeof(char));
     
     while (1) {
-        unsigned long int line_size = 1;
+        int line_size = 1;
         char* line = get_line(&line_size);
         (*text_size) += line_size - 1;
         if ((*text_size) >= capacity) {
             capacity = (int) pow(2, ceil(log2((*text_size))));
             text = (char*) realloc(text, capacity * sizeof(char));
         }
-        
-        text = concatenate(text, line, capacity * sizeof(text));
-        printf("%s\n", line);
-        if (check_last_line(line)) {
+        // printf("%s\n", line);
+        // printf("%d %ld\n", (*text_size), strlen(text));
+        // printf("%d %ld\n", line_size, strlen(line));
+        // printf("%d\n", capacity);
+        text = strcat(text, line);
+        if (check_last_line(line, line_size)) {
             break;
         }
     }
@@ -59,7 +64,7 @@ char* get_text(unsigned long int* text_size) {
 }
 
 
-char* get_line(unsigned long int* line_size) {
+char* get_line(int* line_size) {
     int capacity = 1;
     char* line = (char*) malloc(sizeof(char));
     char ch = getchar();
@@ -76,11 +81,10 @@ char* get_line(unsigned long int* line_size) {
 }
 
 
-int check_last_line(char* line) {
+int check_last_line(char* line, int line_size) {
     char* check_sentence = "Dragon flew away!";
     int j = 16;
-    for (unsigned long int i=strlen(line)-1; i>=0; i--) {
-        printf("[%c] [%c]\n", line[i], check_sentence[j]);
+    for (int i=line_size-2; i>=0; i--) {
         if (line[i] == check_sentence[j]) {
             j--;
             if (j == -1) return 1;
@@ -89,17 +93,4 @@ int check_last_line(char* line) {
         }
     }
     return 0;
-}
-
-
-char* concatenate(char* string1, char* string2, int result_size) {
-    unsigned long int length1 = strlen(string1);
-    unsigned long int length2 = strlen(string2);
-
-    char *result = malloc(result_size);
-
-    memcpy(result, string1, length1);
-    memcpy(result + length1, string2, length2 + 1);    
-
-    return result;
 }
