@@ -14,11 +14,11 @@ type LinkedList struct {
 	Head *Node
 }
 
+// Initialize a new list. The number of elements size.
 func New(size int) *LinkedList {
-	// Initialize a new list. The number of elements size.
 
 	if size <= 0 {
-		fmt.Println("ERROR_New")
+		fmt.Println("ERROR (in New): list size is set incorrectly")
 		return &LinkedList{Head: &Node{}}
 	}
 
@@ -31,8 +31,8 @@ func New(size int) *LinkedList {
 	return &LinkedList{Head: &Head}
 }
 
+// List output
 func (l *LinkedList) PrintList() {
-	// List output
 	display := ""
 	current := l.Head
 
@@ -43,8 +43,8 @@ func (l *LinkedList) PrintList() {
 	fmt.Println(display + strconv.Itoa(current.Val))
 }
 
+// Return the length of the list
 func (l *LinkedList) Size() int {
-	// Return the length of the list
 	size := 1
 	current := l.Head
 	for current.Next != nil {
@@ -54,8 +54,8 @@ func (l *LinkedList) Size() int {
 	return size
 }
 
+// Getting an item from the pos position.
 func (l *LinkedList) At(pos int) Node {
-	// Getting an item from the pos position.
 	current := l.Head
 	i := 0
 	for ; i != pos && current.Next != nil; i++ {
@@ -63,15 +63,15 @@ func (l *LinkedList) At(pos int) Node {
 	}
 
 	if i != pos {
-		fmt.Println("ERROR_At")
+		fmt.Println("ERROR (in At): list index out of range")
 		return Node{}
 	}
 
 	return *current
 }
 
+// Add an item to the end of the list.
 func (l *LinkedList) Add(val int) {
-	// Add an item to the end of the list.
 	current := l.Head
 	for current.Next != nil {
 		current = current.Next
@@ -79,8 +79,8 @@ func (l *LinkedList) Add(val int) {
 	current.Next = &Node{Val: val, Next: nil}
 }
 
+// Make the value at the pos position equal to val.
 func (l *LinkedList) UpdateAt(pos int, val int) {
-	// Make the value at the pos position equal to val.
 	current := l.Head
 	i := 0
 	for ; i != pos && current.Next != nil; i++ {
@@ -88,18 +88,18 @@ func (l *LinkedList) UpdateAt(pos int, val int) {
 	}
 
 	if i != pos {
-		fmt.Println("ERROR_UpdateAt")
+		fmt.Println("ERROR (in UpdateAt): list index out of range")
 		return
 	}
 
 	current.Val = val
 }
 
+// Remove an element from the end.
 func (l *LinkedList) Pop() {
-	// Remove an element from the end.
 
 	if l.Head.Next == nil {
-		fmt.Println("ERROR_Pop: Unable to delete element, list size is already 1")
+		fmt.Println("ERROR (in Pop): Unable to delete element, list size is already 1")
 		return
 	}
 
@@ -110,10 +110,11 @@ func (l *LinkedList) Pop() {
 	current.Next = nil
 }
 
+// Remove an item from the pos position.
 func (l *LinkedList) DeleteAt(pos int) {
-	// Remove an item from the pos position.
+
 	if l.Head.Next == nil {
-		fmt.Println("ERROR_DeleteAt: Unable to delete element, list size is already 1")
+		fmt.Println("ERROR (in DeleteAt): Unable to delete element, list size is already 1")
 		return
 	}
 
@@ -129,18 +130,18 @@ func (l *LinkedList) DeleteAt(pos int) {
 	}
 
 	if i != pos-1 {
-		fmt.Println("ERROR_DeleteAt")
+		fmt.Println("ERROR (in DeleteAt): list index out of range")
 		return
 	}
 
 	current.Next = current.Next.Next
 }
 
+// Creating a linked list from a slice.
 func NewFromSlise(s []int) *LinkedList {
-	// Creating a linked list from a slice.
 
 	if len(s) == 0 {
-		fmt.Println("ERROR_NewFromSlise")
+		fmt.Println("ERROR (in NewFromSlise): Unable convert an empty slice to a list")
 	}
 
 	Head := Node{Val: s[0]}
@@ -153,33 +154,10 @@ func NewFromSlise(s []int) *LinkedList {
 }
 
 func main() {
-	/*
-		list := New(-1)
-		fmt.Println("Size:", list.Size())
-		fmt.Println(list.At(10))
-		list = New(10)
-		for i := 0; i < list.Size(); i++ {
-			list.UpdateAt(i, i*i)
-		}
-		list.PrintList()
 
-		s := []int{}
-		fmt.Printf("%T\n", s)
-		fmt.Println(len(s))
-	*/
-	/*
-		s := []int{-11, 22, 33, 44, -55, 66, -77}
-		s := []int{-11}
-		list := NewFromSlise(s)
-		fmt.Println("size:", list.Size())
-		for i := 0; i < list.Size(); i++ {
-			fmt.Println("[", i, "]:", list.At(i))
-		}
-		fmt.Println("")
-		list.PrintList()
-	*/
+	list := NewFromSlise([]int{-11, 22, 33, 44, -55, 66, -77})
 
-	list := New(5)
+	list.DeleteAt(0)
 
 	fmt.Println("size:", list.Size())
 	for i := 0; i < list.Size(); i++ {
