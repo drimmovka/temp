@@ -1,197 +1,69 @@
 package main
 
-import (
-	"fmt"
-	"strconv"
-)
+import "fmt"
 
-type Node struct {
-	Val  int
-	Next *Node
+func changeArray(arr *[5]int) {
+	arr[0] = -1
 }
 
-type LinkedList struct {
-	Head *Node
+func changeSlice(arr []int) {
+	arr[0] = -1
 }
 
-// Initialize a new list. The number of elements size.
-func New(size int) *LinkedList {
-
-	if size <= 0 {
-		fmt.Println("ERROR (in New): list size is set incorrectly")
-		return &LinkedList{Head: &Node{}}
-	}
-
-	Head := Node{}
-	current := &Head
-	for i := 1; i < size; i++ {
-		current.Next = &Node{}
-		current = current.Next
-	}
-	return &LinkedList{Head: &Head}
+type x struct {
+	p1   int
+	p2   int
+	mas1 [5]int
+	mas2 []int
 }
 
-// List output
-func (l *LinkedList) PrintList() {
-	display := ""
-	current := l.Head
-
-	for current.Next != nil {
-		display += strconv.Itoa(current.Val) + " -> "
-		current = current.Next
-	}
-	fmt.Println(display + strconv.Itoa(current.Val))
+func changeX(t *x) {
+	t.p1 = 10
+	t.p2 = 100
+	t.mas1[0] = -111
+	t.mas2 = append(t.mas2, 10)
 }
 
-// Return the length of the list
-func (l *LinkedList) Size() int {
-	size := 1
-	current := l.Head
-	for current.Next != nil {
-		size++
-		current = current.Next
-	}
-	return size
-}
-
-// Getting an item from the pos position.
-func (l *LinkedList) At(pos int) Node {
-	current := l.Head
-	i := 0
-	for ; i != pos && current.Next != nil; i++ {
-		current = current.Next
-	}
-
-	if i != pos {
-		fmt.Println("ERROR (in At): list index out of range")
-		return Node{}
-	}
-
-	return *current
-}
-
-// Add an item to the end of the list.
-func (l *LinkedList) Add(val int) {
-	current := l.Head
-	for current.Next != nil {
-		current = current.Next
-	}
-	current.Next = &Node{Val: val, Next: nil}
-}
-
-// Make the value at the pos position equal to val.
-func (l *LinkedList) UpdateAt(pos int, val int) {
-	current := l.Head
-	i := 0
-	for ; i != pos && current.Next != nil; i++ {
-		current = current.Next
-	}
-
-	if i != pos {
-		fmt.Println("ERROR (in UpdateAt): list index out of range")
-		return
-	}
-
-	current.Val = val
-}
-
-// Remove an element from the end.
-func (l *LinkedList) Pop() {
-
-	if l.Head.Next == nil {
-		fmt.Println("ERROR (in Pop): Unable to delete element, list size is already 1")
-		return
-	}
-
-	current := l.Head
-	for current.Next.Next != nil {
-		current = current.Next
-	}
-	current.Next = nil
-}
-
-// Remove an item from the pos position.
-func (l *LinkedList) DeleteAt(pos int) {
-
-	if l.Head.Next == nil {
-		fmt.Println("ERROR (in DeleteAt): Unable to delete element, list size is already 1")
-		return
-	}
-
-	if pos == 0 {
-		l.Head = l.Head.Next
-		return
-	}
-
-	current := l.Head
-	i := 0
-	for ; i != pos-1 && current.Next != nil; i++ {
-		current = current.Next
-	}
-
-	if i != pos-1 {
-		fmt.Println("ERROR (in DeleteAt): list index out of range")
-		return
-	}
-
-	current.Next = current.Next.Next
-}
-
-// Creating a linked list from a slice.
-func NewFromSlise(s []int) *LinkedList {
-
-	if len(s) == 0 {
-		fmt.Println("ERROR (in NewFromSlise): Unable convert an empty slice to a list")
-	}
-
-	Head := Node{Val: s[0]}
-	current := &Head
-	for i := 0; i < len(s)-1; i++ {
-		current.Next = &Node{Val: s[i+1]}
-		current = current.Next
-	}
-	return &LinkedList{Head: &Head}
+func (t *x) methodChangeX() {
+	t.p1 = 9
+	t.p2 = 99
+	t.mas1[0] = -222
+	t.mas2 = append(t.mas2, 200)
 }
 
 func main() {
+	a := [5]int{}             //array
+	b := []int{1, 2, 3, 4, 5} //slice
+	fmt.Println("a:", a)
+	fmt.Println("b:", b)
+	fmt.Printf("a: %T\nb: %T\n", a, b)
 
-	list := NewFromSlise([]int{-11, 22, 33, 44, -55, 66, -77})
+	changeArray(&a)
+	changeSlice(b)
 
-	list.DeleteAt(0)
+	fmt.Println("a:", a)
+	fmt.Println("b:", b)
 
-	fmt.Println("size:", list.Size())
-	for i := 0; i < list.Size(); i++ {
-		fmt.Println("[", i, "]:", list.At(i))
+	aPtr := &a
+	fmt.Println("&a/aPtr/aPtr[0]:", &a, aPtr, aPtr[0])
+	fmt.Printf("T(&a): %T T(aPtr): %T\n", &a, aPtr)
+
+	bPtr := &b
+	fmt.Println("&b/bPtr/bPtr[0]:", &b, bPtr)
+	fmt.Printf("T(&b): %T T(bPtr): %T\n", &b, bPtr)
+
+	myX := x{}
+	fmt.Println(myX, &myX)
+
+	changeX(&myX)
+	fmt.Println(myX, &myX)
+
+	myX.methodChangeX()
+	fmt.Println(myX, &myX)
+
+	mega := []int{}
+	for i := 0; i < 100; i++ {
+		mega = append(mega, 100)
+		fmt.Println(cap(mega))
 	}
-	fmt.Println("")
-
-	list.Add(100)
-	list.Add(200)
-	list.Add(300)
-	list.Add(400)
-	list.UpdateAt(0, -50)
-	list.UpdateAt(1, -5000)
-
-	fmt.Println("size:", list.Size())
-	for i := 0; i < list.Size(); i++ {
-		fmt.Println("[", i, "]:", list.At(i))
-	}
-	fmt.Println("")
-
-	list.Pop()
-	list.Pop()
-
-	fmt.Println("size:", list.Size())
-	for i := 0; i < list.Size(); i++ {
-		fmt.Println("[", i, "]:", list.At(i))
-	}
-	fmt.Println("")
-
-	list.DeleteAt(5)
-	fmt.Println("size:", list.Size())
-	for i := 0; i < list.Size(); i++ {
-		fmt.Println("[", i, "]:", list.At(i))
-	}
-	fmt.Println("")
-
 }
