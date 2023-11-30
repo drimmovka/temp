@@ -1,8 +1,10 @@
 #ifndef BST_H
 #define BST_H
 
+#include <wchar.h>
+
 typedef struct Node {
-    char* key;
+    wchar_t* key;
     int data;
     struct Node* left;
     struct Node* right;
@@ -13,8 +15,8 @@ typedef struct {
 } Bst;
 
 Bst* createBst();
-void insert(Bst*, char*);
-int find(Bst*, char*);
+void insert(Bst*, wchar_t*);
+int find(Bst*, wchar_t*);
 void InorderTraversal(Bst*);
 
 #endif

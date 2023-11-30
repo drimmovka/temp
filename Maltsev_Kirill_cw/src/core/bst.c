@@ -1,6 +1,5 @@
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <wchar.h>
 
 #include "bst.h"
 
@@ -20,8 +19,8 @@ Bst* createBst() {
     return b;
 }
 
-void insertByNode(Node* n, char* k) {
-    if (strcmp(n->key, k) < 0) {
+void insertByNode(Node* n, wchar_t* k) {
+    if (wcscmp(n->key, k) < 0) {
         if (n->right == NULL) {
             Node* new_node = createNode();
             new_node->key = k;
@@ -30,7 +29,7 @@ void insertByNode(Node* n, char* k) {
         } else {
             insertByNode(n->right, k);
         }
-    } else if (strcmp(n->key, k) > 0) {
+    } else if (wcscmp(n->key, k) > 0) {
         if (n->left == NULL) {
             Node* new_node = createNode();
             new_node->key = k;
@@ -44,7 +43,7 @@ void insertByNode(Node* n, char* k) {
     }
 }
 
-void insert(Bst* b, char* k) {
+void insert(Bst* b, wchar_t* k) {
     if (b->root == NULL) {
         b->root = createNode();
         b->root->key = k;
@@ -54,19 +53,19 @@ void insert(Bst* b, char* k) {
     insertByNode(b->root, k);
 }
 
-int findByNode(Node* n, char* k) {
+int findByNode(Node* n, wchar_t* k) {
 	if (n == NULL) {
 		return 0;
 	}
-	if (strcmp(n->key, k) < 0) {
+	if (wcscmp(n->key, k) < 0) {
 		return findByNode(n->right, k);
-	} else if (strcmp(n->key, k) > 0) {
+	} else if (wcscmp(n->key, k) > 0) {
 		return findByNode(n->left, k);
 	}
 	return n->data;
 }
 
-int find(Bst* b, char* k) {
+int find(Bst* b, wchar_t* k) {
 	return findByNode(b->root, k);
 }
 
@@ -75,7 +74,7 @@ void inorderTraversalByNode(Node* n) {
 		return;
 	}
 	inorderTraversalByNode(n->left);
-	printf("%s %d\n", n->key, n->data);
+	wprintf(L"%ls %d\n", n->key, n->data);
 	inorderTraversalByNode(n->right);
 }
 

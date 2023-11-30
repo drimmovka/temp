@@ -1,59 +1,59 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include <wchar.h>
+#include <wctype.h>
 
 #include "structures.h"
 
 void getTestType(int* testType) {
-    scanf("%d", testType);
+    wscanf(L"%d", testType);
 }
 
-char* getInput(int* sentencesNumber) {
+wchar_t* getInput(int* sentencesNumber) {
     
     int text_size = 0;
     int capacity = 0;
-    char* t = NULL;
+    wchar_t* t = NULL;
 
     int newLineCount = 0;
-    char ch = getchar(); // skipping the first '\n'
+    wchar_t ch = getwchar(); // skipping the first '\n'
     while (newLineCount < 2) {
-        ch = getchar();
+        ch = getwchar();
         if (ch == '\n') newLineCount++;
         else newLineCount = 0;
         
         if (text_size + 1 >= capacity) {
             capacity = (capacity == 0) ? 2 : capacity * 2;
-            t = (char*) realloc(t, capacity * sizeof(char));
+            t = (wchar_t*) realloc(t, capacity * sizeof(wchar_t));
         }
         
-        if (ch == '.') {
+        if (ch == L'.') {
             (*sentencesNumber)++;
         }
 
         t[text_size] = ch;
         text_size++;
     }
-    t[text_size-2] = '\0';
+    t[text_size-2] = L'\0';
     return t;
 }
 
-void splitText(Text* t, char* input) {
+void splitText(Text* t, wchar_t* input) {
     t->sentences = (Sentence*) malloc(t->sentencesNumber * sizeof(Sentence));
-    char* sep = ".";
-    char* substr;
+    wchar_t* delim = L".";
+    wchar_t* token;
+    wchar_t* ptr;
 
-    substr = strtok(input, sep);
+    token = wcstok(input, delim, &ptr);
     int i = 0;
-    while (substr != NULL) {
-        while (isspace(*substr)) {
-    		substr++;
+    while (token != NULL) {
+        while (iswspace(*token)) {
+    		token++;
 		}
-        t->sentences[i].line = (char*) calloc(strlen(substr)+2, sizeof(char));
-        strcpy(t->sentences[i].line, substr);
-        t->sentences[i].line[strlen(substr)] = '.';
-        t->sentences[i].sentenceSize = strlen(t->sentences[i].line);
+        t->sentences[i].line = (wchar_t*) calloc(wcslen(token)+2, sizeof(wchar_t));
+        wcscpy(t->sentences[i].line, token);
+        t->sentences[i].line[wcslen(token)] = L'.';
+        t->sentences[i].sentenceSize = wcslen(t->sentences[i].line);
         i++;
-        substr = strtok(NULL, sep);
+        token = wcstok(NULL, delim, &ptr);
     }
 }

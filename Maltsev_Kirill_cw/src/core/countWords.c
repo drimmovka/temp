@@ -1,28 +1,29 @@
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include <wchar.h>
+#include <wctype.h>
 
 #include "structures.h"
 #include "bst.h"
 
-void insertWords(Bst* bst, char* line) {
-    char* sep = "., \f\n\r\t\v";
-    char* substr;
+void insertWords(Bst* bst, wchar_t* line) {
+    wchar_t* delim = L"., \f\n\r\t\v";
+    wchar_t* token;
+    wchar_t* ptr;
 
-    substr = strtok(line, sep);
-    while (substr != NULL) {
-        while (isspace(*substr)) {
-    		substr++;
+    token = wcstok(line, delim, &ptr);
+    while (token != NULL) {
+        while (iswspace(*token)) {
+    		token++;
 		}
-        insert(bst, substr);
-        substr = strtok(NULL, sep);        
+        insert(bst, token);
+        token = wcstok(NULL, delim, &ptr);        
     }
 }
 
 void fillBstByWords(Bst* bst, Text* t) {
     for (int i=0; i<t->sentencesNumber; i++) {
-        char* cpy = (char*) calloc(strlen(t->sentences[i].line)+1, sizeof(char));
-        strcpy(cpy, t->sentences[i].line);
+        wchar_t* cpy = (wchar_t*) calloc(wcslen(t->sentences[i].line)+1, sizeof(wchar_t));
+        wcscpy(cpy, t->sentences[i].line);
         insertWords(bst, cpy);
     }
 }

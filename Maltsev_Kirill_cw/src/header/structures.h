@@ -1,8 +1,10 @@
 #ifndef STRUCTERES_H
 #define STRUCTERES_H
 
+#include <wchar.h>
+
 typedef struct {
-    char* line;
+    wchar_t* line;
     int sentenceSize;
 } Sentence;
 

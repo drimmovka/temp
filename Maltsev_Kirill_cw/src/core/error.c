@@ -1,5 +1,5 @@
-#include <stdio.h>
+#include <wchar.h>
 
 void throwTestTypeError() {
-    printf("Error: wrong test type.\n");
+    wprintf(L"Error: wrong test type.\n");
 }

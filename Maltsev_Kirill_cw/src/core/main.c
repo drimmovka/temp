@@ -1,4 +1,7 @@
 #include <stdlib.h>
+#include <locale.h>
+#include <wchar.h>
+
 
 #include "structures.h"
 #include "removeDuplicates.h"
@@ -7,12 +10,13 @@
 #include "output.h"
 
 int main() {
+    setlocale(LC_CTYPE, "");
     int testType;
     getTestType(&testType);
 
     if (textWillBeEntered(testType)) {
         Text* text = createText();
-        char* input = getInput(&(text->sentencesNumber));
+        wchar_t* input = getInput(&(text->sentencesNumber));
         
         splitText(text, input);
 

@@ -1,10 +1,12 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <wchar.h>
+
 #include "structures.h"
 
 void getTestType(int*);
-char* getInput(int*);
-void splitText(Text*, char*);
+wchar_t* getInput(int*);
+void splitText(Text*, wchar_t*);
 
 #endif

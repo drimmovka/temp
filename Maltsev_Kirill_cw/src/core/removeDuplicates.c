@@ -1,22 +1,22 @@
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include <wchar.h>
+#include <wctype.h>
 
 #include "structures.h"
 #include "bst.h"
 
-char* sentenceToUpper(Sentence* s) {
-    char* cpy = (char*) calloc( strlen(s->line)+1, sizeof(char) );
-    strcpy(cpy, s->line);
-    for (int j=0; j<strlen(cpy); j++) {
-        cpy[j] = toupper(cpy[j]);
+wchar_t* sentenceToUpper(Sentence* s) {
+    wchar_t* cpy = (wchar_t*) calloc( wcslen(s->line)+1, sizeof(wchar_t) );
+    wcpcpy(cpy, s->line);
+    for (int j=0; j<wcslen(cpy); j++) {
+        cpy[j] = towupper(cpy[j]);
     }
     return cpy;
 }
 
 void fillBstBySentences(Bst* bst, Text* t) {
     for (int i=0; i<t->sentencesNumber; i++) {
-        char* cpy = sentenceToUpper(&t->sentences[i]);
+        wchar_t* cpy = sentenceToUpper(&t->sentences[i]);
         insert(bst, cpy);
     }
 }
@@ -28,7 +28,7 @@ void removeDuplicates(Text* t) {
     int j = 0;
     for (int i=0; i<t->sentencesNumber; i++) {
         
-        char* cpy = sentenceToUpper(&t->sentences[i]);
+        wchar_t* cpy = sentenceToUpper(&t->sentences[i]);
 
         if (find(bst, cpy) == 1) {
             t->sentences[j] = t->sentences[i];
